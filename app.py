@@ -47,8 +47,8 @@ def todo():
             return {'relibale': percentyes, 'unreliable': percentno, 'unknown': unknown}
             
         stats = GPT3Call(todo_form.content.data)
-        print(stats['relibale'])
-        
+        print(stats['relibale'])  
+        return render_template('todo.html', form=todo_form, data=  "reliable "+ str(stats['relibale']) + '\n unreliable: '  + str(stats['unreliable']) )
 
     return render_template('todo.html', form=todo_form)
 
