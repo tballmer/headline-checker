@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form action="/todo" method="POST">
+    <form action="/" method="POST">
         {{ form.hidden_tag()}}
         {{ form.content }}
         {{ form.submit }}

@@ -2,10 +2,12 @@ from flask import Flask, redirect, render_template, request, redirect, url_for
 from forms import Todo
 import openai
 import numpy as np
+from decouple import config
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'password'
 
+'''
 @app.route('/', methods=['GET','POST'])
 def hello_world():
     request_method = request.method
@@ -13,18 +15,18 @@ def hello_world():
         content = request.form['content']
         return redirect(url_for('name',content=content))
     return render_template('hello.html',request_method=request_method)
-
+'''
 @app.route('/name/<string:content>')
 def name(content):
     return f'{content}'
 
-@app.route('/todo', methods=['GET','POST'])
+@app.route('/', methods=['GET','POST'])
 def todo():
     todo_form = Todo()
     if todo_form.validate_on_submit():
         print(todo_form.content.data)
 
-        openai.api_key = "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"
+        openai.api_key = config('TRUTH_TELLER_API_KEY')
 
         def GPT3Call(prompt):
             response = openai.Completion.create(
