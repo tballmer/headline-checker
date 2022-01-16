@@ -1,5 +1,9 @@
-from flask import Flask, redirect, render_template, request, redirect, url_for
+from flask import Flask, redirect, render_template, render_template_string, request, redirect, url_for
 from forms import Todo
+import matplotlib
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 import openai
 import numpy as np
 from decouple import config
@@ -7,15 +11,7 @@ from decouple import config
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'password'
 
-'''
-@app.route('/', methods=['GET','POST'])
-def hello_world():
-    request_method = request.method
-    if request.method == 'POST':
-        content = request.form['content']
-        return redirect(url_for('name',content=content))
-    return render_template('hello.html',request_method=request_method)
-'''
+
 @app.route('/name/<string:content>')
 def name(content):
     return f'{content}'
@@ -24,6 +20,7 @@ def name(content):
 def todo():
     todo_form = Todo()
     if todo_form.validate_on_submit():
+        matplotlib.use('agg')
         print(todo_form.content.data)
 
         openai.api_key = config('TRUTH_TELLER_API_KEY')
@@ -44,13 +41,34 @@ def todo():
             except:
                 percentyes = 0
             unknown = 100 - (percentyes + percentno)
-            return {'relibale': percentyes, 'unreliable': percentno, 'unknown': unknown}
+            return {'reliable': percentyes, 'unreliable': percentno, 'unknown': unknown}
             
         stats = GPT3Call(todo_form.content.data)
-        print(stats['relibale'])  
-        return render_template('todo.html', form=todo_form, data=  "reliable "+ str(stats['relibale']) + '\n unreliable: '  + str(stats['unreliable']) )
+
+        def pie(data):
+            labels = ['unreliable', 'unknown', 'reliable']
+            sizes = [abs(data['unreliable']), abs(data['unknown']), abs(data['reliable'])]
+            fig1, ax1 = plt.subplots()
+            colors = ['#ff9999','#66b3ff','#99ff99']
+            explode = (0.05,0.05,0.05)
+            plt.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85, explode = explode)
+            centre_circle = plt.Circle((0,0),0.70,fc='white')
+            fig = plt.gcf()
+            fig.gca().add_artist(centre_circle)
+            ax1.axis('equal')
+            plt.tight_layout()
+            fig = plt
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            data = base64.b64encode(buf.getbuffer()).decode("ascii")
+            return f"<img src='data:image/png;base64,{data}'/>"
+
+        piegraph = pie(stats)
+        print(stats['reliable'])  
+        return render_template('todo.html', form=todo_form, data= "reliable "+ str(stats['reliable'])[:12] + '%\n unreliable: '  + str(stats['unreliable'])[:12] + "%", piegraph=piegraph)
 
     return render_template('todo.html', form=todo_form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
