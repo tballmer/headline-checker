@@ -50,9 +50,10 @@ def todo():
             sizes = [abs(data['unreliable']), abs(data['unknown']), abs(data['reliable'])]
             fig1, ax1 = plt.subplots()
             colors = ['#ff9999','#66b3ff','#99ff99']
+            plt.figure(facecolor='#9E9E9E')
             explode = (0.05,0.05,0.05)
-            plt.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85, explode = explode)
-            centre_circle = plt.Circle((0,0),0.70,fc='white')
+            plt.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85)
+            centre_circle = plt.Circle((0,0),0.70,fc='#9E9E9E')
             fig = plt.gcf()
             fig.gca().add_artist(centre_circle)
             ax1.axis('equal')
@@ -65,10 +66,10 @@ def todo():
 
         piegraph = pie(stats)
         print(stats['reliable'])  
-        return render_template('todo.html', form=todo_form, data= "reliable "+ str(stats['reliable'])[:12] + '%\n unreliable: '  + str(stats['unreliable'])[:12] + "%", piegraph=piegraph)
+        return render_template('todo.html', form=todo_form, results= "reliable: "+ str(stats['reliable'])[:12] + '%\n unreliable: '  + str(stats['unreliable'])[:12] + "%", piegraph=piegraph)
 
     return render_template('todo.html', form=todo_form)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

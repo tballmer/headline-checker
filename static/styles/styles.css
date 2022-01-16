@@ -1,0 +1,61 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    font-size: 3em;
+}
+
+#text {
+    font-size: 3em;
+}
+
+body {
+    background-color: #9E9E9E;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.graph {
+    height: 100px;
+    width: 100px;
+}
+
+textarea {
+    resize: none;
+}
+
+.form_control {
+    height: 75px;
+    width: 80vw;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.form_button {
+    margin: 5px;
+    width: 150px;
+}
+
+img {
+    max-width: 75%;
+    min-height: auto;
+}
+
+.data-results {
+    font-size: 4rem;
+}

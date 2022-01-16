@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form action="/" method="POST">
+    <h2>relAIablity</h2>
+    <span>Enter a headline into the validator:</span>
+    <form action="/" method="POST" maxlength="200">
         {{ form.hidden_tag()}}
-        {{ form.content }}
-        {{ form.submit }}
+        {{ form.content(class="form_control") }}
+        {{ form.submit(class="form_button") }}
     </form>
 
-    {{ data }}
-
-    {{ piegraph|safe }}
+        {{ results }}
+        {{ piegraph|safe }}
+   
 
 {% endblock content%}
