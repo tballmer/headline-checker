@@ -46,10 +46,16 @@ def todo():
         stats = GPT3Call(todo_form.content.data)
 
         def pie(data):
-            labels = ['unreliable', 'unknown', 'reliable']
-            sizes = [abs(data['unreliable']), abs(data['unknown']), abs(data['reliable'])]
-            fig1, ax1 = plt.subplots()
-            colors = ['#ff9999','#66b3ff','#99ff99']
+            if data['unknown'] < 0.0001:
+                labels = ['unreliable', 'unknown', 'reliable']
+                sizes = [abs(data['unreliable']), abs(data['unknown']), abs(data['reliable'])]
+                fig1, ax1 = plt.subplots()
+                colors = ['#ff9999','#66b3ff','#99ff99']
+            else:
+                labels = ['unreliable', 'reliable']
+                sizes = [abs(data['unreliable']), abs(data['reliable'])]
+                fig1, ax1 = plt.subplots()
+                colors = ['#ff9999','#99ff99']
             plt.figure(facecolor='#9E9E9E')
             explode = (0.05,0.05,0.05)
             plt.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85)
