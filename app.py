@@ -24,7 +24,7 @@ def todo():
         print(todo_form.content.data)
 
         openai.api_key = config('TRUTH_TELLER_API_KEY')
-
+        #calls AI model
         def GPT3Call(prompt):
             response = openai.Completion.create(
                 model="curie:ft-personal-2022-01-16-04-34-35",
@@ -44,9 +44,9 @@ def todo():
             return {'reliable': percentyes, 'unreliable': percentno, 'unknown': unknown}
             
         stats = GPT3Call(todo_form.content.data)
-
+        #displays data from model
         def pie(data):
-            if data['unknown'] < 0.0001:
+            if data['unknown'] < 0.1:
                 labels = ['unreliable', 'unknown', 'reliable']
                 sizes = [abs(data['unreliable']), abs(data['unknown']), abs(data['reliable'])]
                 fig1, ax1 = plt.subplots()
